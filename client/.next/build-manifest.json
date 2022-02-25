@@ -30,10 +30,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/events/[slug]": [
+    "/events": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/events/[slug].js"
+      "static/chunks/pages/events.js"
+    ],
+    "/events/search": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/events/search.js"
     ]
   },
   "ampFirstPages": []
