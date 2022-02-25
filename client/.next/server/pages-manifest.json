@@ -2,6 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/events/search": "pages/events/search.js",
-  "/": "pages/index.js"
+  "/events/add": "pages/events/add.js"
 }
