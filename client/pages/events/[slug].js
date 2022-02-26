@@ -1,16 +1,16 @@
-import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import {FaPencilAlt, FaTimes} from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import Layout from "@/components/Layout";
-import { API_URL } from "@/config/index";
+import {API_URL} from "@/config/index";
 import styles from "@/styles/Event.module.css";
- 
+
 export default function EventPage({ evt }) {
   const { attributes } = evt;
   const deleteEvent = (e) => {
     console.log(e);
   };
- 
+
   return (
     <Layout>
       <div className={styles.event}>
@@ -33,7 +33,7 @@ export default function EventPage({ evt }) {
         {attributes.image && (
           <div className={styles.image}>
             <Image
-              src={attributes.image.data.attributes.formats.large.url}
+              src={attributes.image.data?.attributes.formats.large.url ? attributes.image.data.attributes.formats.large.url : '/images/event-default.png'}
               alt="Event Image"
               width={960}
               height={600}
@@ -53,15 +53,14 @@ export default function EventPage({ evt }) {
     </Layout>
   );
 }
- 
+
 // Looks at your data, creates paths from slugs/ids
 // This function gets called at build time
 export async function getStaticPaths() {
   // Call an external API endpoint to get events
-  const res = await fetch(`${API_URL}/api/events?populate=*&_sort=date:ASC`);
+  const res = await fetch(`${API_URL}/api/events?populate=*`);
   const json = await res.json();
   const events = json.data;
- 
   // Get the paths we want to pre-render based on events
   const paths = events.map((evt) => {
     return {
@@ -75,23 +74,22 @@ export async function getStaticPaths() {
     fallback: true,
   };
 }
- 
+
 // From the slug that you have provided, pulls event information
 export async function getStaticProps({ params: { slug } }) {
   // params contains the event `slug`.
   // If the route is like /events/he, then params.slug is he
-  const res = await fetch(`${API_URL}/api/events?slug=${slug}&populate=*`);
+  const res = await fetch(`${API_URL}/api/events?slug='${slug}'&populate=*`);
   const json = await res.json();
   const events = json.data;
- 
+
   // Pass event data to the page via props
-  return { props: { evt: events[0] }, revalidate: 1 };
+  return {props: {evt: events.find(el => el.attributes.slug == slug)}, revalidate: 1};
 }
- 
+
 // export async function getServerSideProps({ query: { slug } }) {
 //   const res = await fetch(`${API_URL}/api/events/${slug}`);
 //   const events = await res.json();
- 
+
 //   return { props: { evt: events[0] } };
 // }
- 
