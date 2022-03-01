@@ -10,6 +10,7 @@ import styles from '@/styles/Form.module.css'
 import moment from "moment";
 import Image from 'next/image'
 import {FaImage} from "react-icons/fa";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function EditEventPage({evt}) {
     const [values, setValues] = useState({
@@ -22,7 +23,7 @@ export default function EditEventPage({evt}) {
         description: evt.data.attributes.description,
     })
 
-    const [imagePreview, setImagePreview] = useState(evt.data.attributes.image.data.attributes.formats.thumbnail.url ? evt.data.attributes.image.data.attributes.formats.thumbnail.url : null)
+    const [imagePreview, setImagePreview] = useState(evt.data.attributes.image.data?.attributes.formats.large.url ? evt.data.attributes.image.data?.attributes.formats.large.url : null)
 
     const [showModal, setShowModal] = useState(false)
 
@@ -60,6 +61,14 @@ export default function EditEventPage({evt}) {
     const handleInputChange = (e) => {
         const {name, value} = e.target
         setValues({...values, [name]: value})
+    }
+
+    const imageUploaded = async (e) => {
+        const res = await fetch(`${API_URL}/api/events/${evt.data.id}?populate=*`)
+        const data = await res.json()
+        console.log(data)
+        setImagePreview(evt.data.attributes.image.data?.attributes.formats.large.url)
+        setShowModal(false)
     }
 
     return (
@@ -158,7 +167,7 @@ export default function EditEventPage({evt}) {
             </div>
 
             <Modal show={showModal} onClose={() => setShowModal(false)}>
-                Image Upload
+                <ImageUpload evtId={evt.data.id} imageUploaded={imageUploaded}/>
             </Modal>
         </Layout>
     )
