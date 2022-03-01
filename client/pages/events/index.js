@@ -1,13 +1,9 @@
 import Layout from "@/components/Layout";
 import EventItem from "@/components/EventItem";
-import {API_URL} from "@/config/index";
-import Link from "next/link";
-
-const PER_PAGE = 5;
+import {API_URL, PER_PAGE} from "@/config/index";
+import Pagination from "@/components/Pagination";
 
 export default function EventsPage({events, page, total}) {
-    const lastPage = Math.ceil(total / PER_PAGE);
-
 
     return (
         <Layout>
@@ -17,17 +13,7 @@ export default function EventsPage({events, page, total}) {
             {events.map((evt) => (
                 <EventItem key={evt.id} evt={evt.attributes}/>
             ))}
-
-            {page > 1 && (
-                <Link href={`/events/?page=${page - 1}`}>
-                    <a className="btn-secondary">Prev</a>
-                </Link>
-            )}
-            {page < lastPage && (
-                <Link href={`/events/?page=${page + 1}`}>
-                    <a className="btn-secondary">Next</a>
-                </Link>
-            )}
+            <Pagination page={page} total={total}/>
         </Layout>
     )
 }
