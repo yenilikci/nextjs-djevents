@@ -11,6 +11,9 @@
       "@/config/*": [
         "config/*"
       ],
+      "@/context/*": [
+        "context/*"
+      ]
     }
   }
 }
