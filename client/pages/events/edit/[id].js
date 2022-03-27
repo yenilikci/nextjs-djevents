@@ -11,8 +11,9 @@ import moment from "moment";
 import Image from 'next/image'
 import {FaImage} from "react-icons/fa";
 import ImageUpload from "@/components/ImageUpload";
+import {parseCookies} from "@/helpers/index";
 
-export default function EditEventPage({evt}) {
+export default function EditEventPage({evt, token}) {
     const [values, setValues] = useState({
         name: evt.data.attributes.name,
         performers: evt.data.attributes.performers,
@@ -45,11 +46,15 @@ export default function EditEventPage({evt}) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({"data": values}),
         })
 
         if (!res.ok) {
+            if (res.status === 403 || res.status === 401) {
+                toast.error('Unauthorized')
+            }
             toast.error('Something Went Wrong')
         } else {
             const evt = await res.json()
@@ -167,20 +172,23 @@ export default function EditEventPage({evt}) {
             </div>
 
             <Modal show={showModal} onClose={() => setShowModal(false)}>
-                <ImageUpload evtId={evt.data.id} imageUploaded={imageUploaded}/>
+                <ImageUpload evtId={evt.data.id} imageUploaded={imageUploaded} token={token}/>
             </Modal>
         </Layout>
     )
 }
 
 export async function getServerSideProps({params: {id}, req}) {
+    const {token} = parseCookies(req);
+
     const res = await fetch(`${API_URL}/api/events/${id}?populate=*`);
     const evt = await res.json();
 
     console.log(req.headers.cookie);
     return {
         props: {
-            evt
+            evt,
+            token
         }
     }
 }
