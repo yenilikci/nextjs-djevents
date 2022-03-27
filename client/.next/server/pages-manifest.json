@@ -2,7 +2,8 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/api/login": "pages/api/login.js",
   "/events": "pages/events.js",
-  "/events/[slug]": "pages/events/[slug].js"
+  "/api/login": "pages/api/login.js",
+  "/account/dashboard": "pages/account/dashboard.js",
+  "/api/user": "pages/api/user.js"
 }
